@@ -2,7 +2,7 @@
 
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Add New Student</title>
+    <title>Add New Product</title>//Student
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     <script type="text/javascript" th:src="@{/webjars/jquery/3.3.1/dist/jquery.min.js}"></script>
@@ -14,11 +14,11 @@
 
 <html>
     <body>
-        <form th:action="@{/students/add}" th:object="${student}" method="post">
-            First Name: <input type="text" th:field="*{name}"/>
+        <form th:action="@{/products/add}" th:object="${product}" method="post">
+            First Name: <input type="text" th:field="*{item}"/>
             <br>
             <div class="submit">
-                <button name="addStudent" type="submit">Add student</button>
+                <button name="addProduct" type="submit">Add product</button>
             </div>
 
         </form>
