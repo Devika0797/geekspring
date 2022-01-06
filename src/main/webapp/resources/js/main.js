@@ -1,13 +1,13 @@
 $(document).ready(function() {
     $('.infoBtn').on('click', function(event) {
-		var studentId = $(this).attr('entryIndex');
-		console.log(studentId);
+		var id = $(this).attr('entryIndex');
+		console.log(id);
         // location.reload(false);
 	});
 
     $('.removeBtn').on('click', function(event) {
-		var studentId = $(this).attr('entryIndex');
-		$.get("/students/remove/" + studentId);
+		var id = $(this).attr('entryIndex');
+		$.get("/products/remove/" + id);
         // reload();
 	});
 
@@ -23,20 +23,21 @@ $(document).ready(function() {
 		event.preventDefault();
 		var href = $(this).attr('href');		
 		$.get(href, function(book, status) {
-			$('.myForm #id').val(book.id);
+			$('.myForm #id').val(products.id);
+			$('.myForm #item').val(products.item);
 			$('.myForm #title').val(book.title);
-			$('.myForm #author').val(book.author);
 		});		
 		$('.myForm #editModal').modal();
 	});
 	
-	$('.addNewBookBtn').on('click', function(event) {
+	$('.addNewProductBtn').on('click', function(event) {
 		event.preventDefault();		
 		var href = $(this).attr('href');		
-		$.get(href, function(book, status) {
-			$('.myForm #id').val(book.id);
-			$('.myForm #title').val(book.title);
-			$('.myForm #author').val(book.author);
+		$.get(href, function(products, status) {
+		$('.myForm #id').val(products.id);
+        $('.myForm #item').val(products.item);
+        $('.myForm #title').val(book.title);
+
 		});	
 		$('.myForm #editModal').modal();
 	});
