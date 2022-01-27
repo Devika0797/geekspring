@@ -18,15 +18,9 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private DataSource myDataSource;
+
     private UserService userService;
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
-
-
-    @Autowired
-    public void setMyDataSource(DataSource myDataSource){
-        this.myDataSource = myDataSource;
-    }
 
     public void setUserService(UserService userService) {
         this.userService = userService;
@@ -38,12 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication().dataSource(myDataSource);
-//        User.UserBuilder users = User.builder();
-//        auth.inMemoryAuthentication()
-//                .withUser(users.username("alex").password("{noop}1234").roles("USER", "ADMIN"))
-//                .withUser(users.username("alex").password("{noop}1234").roles("USER"));
-
+        auth.authenticationProvider(authenticationProvider());
     }
 
     @Override
@@ -52,6 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
+                // .antMatchers("/products/**").permitAll()
+                // .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -60,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .logout()
+                //.logoutSuccessUrl("/products")
                 .permitAll();
     }
 

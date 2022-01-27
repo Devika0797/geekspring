@@ -2,25 +2,27 @@ package com.geekbrains.controllers;
 
 import com.geekbrains.entities.Product;
 import com.geekbrains.repositories.ProductSpecs;
+import com.geekbrains.services.CategoryService;
 import com.geekbrains.services.ProductService;
-import com.geekbrains.services.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
+
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/shop")
-public class ShopController {
+@RequestMapping("/products")
+public class ProductController {
     private static final int INITIAL_PAGE = 0;
     private static final int PAGE_SIZE = 5;
 
     private ProductService productService;
-    private ShoppingCartService shoppingCartService;
+    private CategoryService categoryService;
+
 
     @Autowired
     public void setProductService(ProductService productService) {
@@ -28,9 +30,10 @@ public class ShopController {
     }
 
     @Autowired
-    public void setShoppingCartService(ShoppingCartService shoppingCartService) {
-        this.shoppingCartService = shoppingCartService;
+    public void setCategoryService(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
+
 
     @GetMapping
     public String shopPage(Model model,
@@ -68,15 +71,33 @@ public class ShopController {
         model.addAttribute("max", max);
         model.addAttribute("word", word);
 
-
         return "shop-page";
     }
 
-    @GetMapping("/cart/add/{id}")
-    public String addProductToCart(Model model, @PathVariable("id") Long id, HttpServletRequest httpServletRequest) {
-        shoppingCartService.addToCart(httpServletRequest.getSession(), id);
-        String referrer = httpServletRequest.getHeader("referer");
 
-        return "redirect:" + referrer;
+    @Secured({"ROLE_ADMIN"})
+    @RequestMapping(value = "/products/delete/{id}", method = RequestMethod.GET)
+    public String deleteById(@PathVariable("id") int id){
+        productService.delete((long) id);
+        return "redirect:/products";
     }
+
+        @GetMapping(value = "/products/add")
+        public String showProductForm(Model model) {
+            Product product = new Product();
+            model.addAttribute("product", product);
+            model.addAttribute("categories", categoryService.getAllCategories());
+            return "product-form";
+        }
+
+        @PostMapping("/products/add")
+        public String addProduct(@ModelAttribute(value="product") Product product) {
+            product.setId(0L);
+            productService.add(product);
+            return "redirect:/products";
+        }
+
+
+
+
 }

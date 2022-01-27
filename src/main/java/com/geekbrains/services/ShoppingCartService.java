@@ -25,10 +25,6 @@ public class ShoppingCartService {
         return cart;
     }
 
-    public void resetCart(HttpSession session) {
-        session.removeAttribute("cart");
-    }
-
     public void addToCart(HttpSession session, Long productId) {
         Product product = productService.getProductById(productId);
         addToCart(session, product);

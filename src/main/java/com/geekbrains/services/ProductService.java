@@ -23,12 +23,18 @@ public class ProductService {
         return (List<Product>)(productRepository.findAll());
     }
 
-    public List<Product> getAllProductsWithFilter(Specification<Product> productSpecs) {
-        return (List<Product>)(productRepository.findAll(productSpecs));
-    }
+//    public List<Product> getAllProductsWithFilter(Specification<Product> productSpecs) {
+//        return (List<Product>)(productRepository.findAll(productSpecs));
+//    }
 
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElse(null);
+    }
+    public void delete(Long id) {
+        productRepository.deleteById(id);
+    }
+    public Product add(Product product){
+        return productRepository.save(product);
     }
 
     public Page<Product> getAllProductsByPage(int pageNumber, int pageSize) {
@@ -39,11 +45,10 @@ public class ProductService {
         return productRepository.findAll(productSpecification, PageRequest.of(pageNumber, pageSize));
     }
 
-    public boolean isProductWithTitleExists(String productTitle) {
-        return productRepository.findOneByTitle(productTitle) != null;
-    }
 
     public void saveProduct(Product product) {
         productRepository.save(product);
     }
+
+
 }

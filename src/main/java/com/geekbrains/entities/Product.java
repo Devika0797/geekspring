@@ -20,10 +20,13 @@ public class Product implements Serializable {
     private Long id;
 
     @ManyToOne
+    @NotNull(message = "категория не выбрана")
     @JoinColumn(name = "category_id")
     private Category category;
 
     @Column(name = "vendor_code")
+    @NotNull(message = "не может быть пустым")
+    @Pattern(regexp = "([0-9]{1,})", message = "недопустимый символ")
     @Size(min = 8, max = 8, message = "требуется 8 числовых символов")
     private String vendorCode;
 
@@ -31,6 +34,7 @@ public class Product implements Serializable {
     private List<ProductImage> images;
 
     @Column(name = "title")
+    @NotNull(message = "не может быть пустым")
     @Size(min = 5, max = 250, message = "требуется минимум 5 символов")
     private String title;
 
@@ -41,6 +45,7 @@ public class Product implements Serializable {
     private String fullDescription;
 
     @Column(name = "price")
+    @NotNull(message = "не может быть пустым")
     @DecimalMin(value = "0.01", message = "минимальное значение 0")
     @Digits(integer = 10, fraction = 2)
     private double price;
